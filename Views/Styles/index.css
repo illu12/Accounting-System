@@ -1,0 +1,5 @@
+#allAccounts{
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-gap: 1em;
+}

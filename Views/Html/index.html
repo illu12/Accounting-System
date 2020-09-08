@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <!-- Metadata -->
+    <meta charset="utf-8">
+    <title>Accounting System</title>
+    <!-- Jquery -->
+    <script src="../Javascript/jquery-3.5.1.js"></script>
+    <!-- Bootstrap -->
+    <script src="../../Bootstrap/js/bootstrap.js"></script>
+    <link href="../../Bootstrap/css/bootstrap.css" rel="stylesheet">
+    <!-- Javascript -->
+    <script src="../../Models/account.js"></script>
+    <script src="../Javascript/interactions.js"></script>
+    <!-- Css -->
+    <link href="../Styles/index.css" rel="stylesheet">
+  </head>
+  <body onload="showAccounts()">
+    <!-- Main container -->
+    <div class="container">
+      <!-- Title description -->
+      <h1 class="display-4 text-center mb-5 mt-5">This is a basic accounting system for personal/educational usage.</h1>
+      <!-- Create new account -->
+      <div class="input-group mb-5">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Account name</span>
+        </div>
+        <input id="accountName" type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+        <div class="input-group-append">
+          <button class="input-group-text" onclick="createAccount();showAccounts()">Opret</button>
+        </div>
+      </div>
+      <!-- Show all accounts -->
+      <div id="allAccounts" class="container mt-5"></div>
+    </div>
+  </body>
+</html>
