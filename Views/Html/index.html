@@ -12,6 +12,8 @@
     <!-- Javascript -->
     <script src="../../Models/account.js"></script>
     <script src="../Javascript/interactions.js"></script>
+    <script src="../Javascript/modalScript.js"></script>
+
     <!-- Css -->
     <link href="../Styles/index.css" rel="stylesheet">
   </head>
@@ -33,5 +35,24 @@
       <!-- Show all accounts -->
       <div id="allAccounts" class="container mt-5"></div>
     </div>
+
+
+    <!-- Modal window, dynamically based on area clicked -->
+		<div id="modal" class="modal-container">
+			<div class="modal-background"></div>
+			<div class="modal-content text-dark">
+				<!-- Modal title -->
+				<div id="modal-title" class="display-4 text-center mt-3"></div>
+				<!-- Questionaire -->
+				<div id="output"></div>
+				<!-- Save/close buttons -->
+				<div class="modal-footer">
+					<button onclick="modal(this)" type="button" class="btn btn-secondary">Close</button>
+				</div>
+			</div>
+		</div>
+
+
+
   </body>
 </html>

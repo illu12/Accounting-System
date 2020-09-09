@@ -1,9 +1,39 @@
-// Create accounts
-var Sales = new Account("Sales");
-var Cash = new Account("Cash");
-var Purchases = new Account("Purchases");
 
+function transfer(accountId){
+  // Get inputs
+  var date = new Date();
+  var description = document.getElementById("description").value;
+  var location = document.getElementById("location").value;
+  var amount = document.getElementById("amount").value;
 
+  // Get account details
+  // Instantiate creditor account
+  var creditorAccount = JSON.parse(localStorage.getItem(accountId));
+  var temp_creditorAccount = new Account(creditorAccount.name);
+  temp_creditorAccount.debitLedger = creditorAccount.debitLedger;
+  temp_creditorAccount.creditLedger = creditorAccount.creditLedger;
+
+  // Instantiate debitor account
+  var debitorAccount = JSON.parse(localStorage.getItem(location));
+  var temp_debitorAccount = new Account(debitorAccount.name);
+  temp_debitorAccount.debitLedger = debitorAccount.debitLedger;
+  temp_debitorAccount.creditLedger = debitorAccount.creditLedger;
+
+  // Make transaction
+  temp_creditorAccount.credit(temp_debitorAccount,{
+    date: date.getTime(),
+    description: description,
+    location: location,
+    amount: amount
+  });
+
+  // Save new account details (both accounts, debitor and creditor)
+  localStorage.setItem(temp_creditorAccount.name,JSON.stringify(temp_creditorAccount));
+  localStorage.setItem(temp_debitorAccount.name,JSON.stringify(temp_debitorAccount));
+
+  alert("Transfer has been made.");
+  showAccounts();
+}
 
 function createAccount(){
   var accountName = document.getElementById("accountName").value;
@@ -14,6 +44,7 @@ function createAccount(){
   else{
     localStorage.setItem(accountName,JSON.stringify(account));
     alert("Account created.");
+    document.getElementById("accountName").value = "";
   }
 }
 
@@ -26,100 +57,88 @@ function showAccounts(){
     // Account
     var account = JSON.parse(localStorage.getItem(Object.keys(localStorage)[i]));
 
-    // Create container
-    var container = document.createElement("div");
-    container.className = "border mb-5";
+    // Create outer container
+    var outerContainer = document.createElement("div");
+    outerContainer.className = "border mb-5";
 
     // Create titel for account
     var title = document.createElement("h5");
-    title.className = "display-4 text-center";
+    title.className = "display-4 text-center m-3";
     title.style.fontSize = "2em";
     title.appendChild(document.createTextNode(Object.keys(localStorage)[i]));
-    container.appendChild(title);
+    outerContainer.appendChild(title);
+
+    var hr = document.createElement("hr");
+    outerContainer.appendChild(hr);
+
+    // Create inner container
+    var innerContainer = document.createElement("div");
+    innerContainer.className = "text-center";
+    innerContainer.style.display = "grid";
+    innerContainer.style.gridTemplateColumns = "auto auto";
 
 
-    // Create table
-    var table = document.createElement("table");
-    table.className = "table table-hover text-center";
-
-    // Create table header
-    var header = document.createElement("thead");
-
-    // Create table header row
-    var headerRow = document.createElement("tr");
-
-    // Create table header items
-
-    var headerItem1 = document.createElement("th");
-    headerItem1.appendChild(document.createTextNode("Debit"));
-    headerRow.appendChild(headerItem1);
-    var headerItem2 = document.createElement("th");
-    headerItem2.appendChild(document.createTextNode("Credit"));
-    headerRow.appendChild(headerItem2);
-
-    // Finish and append header elements
-    header.appendChild(headerRow);
-    table.appendChild(header);
-
-    // Create table body
-    var tableBody = document.createElement("tbody");
-    tableBody.id = account.name;
-
-    // Create data cells
-    // Debit
-    account.debitLedger = [300,400,200];
+    // Create debit container
+    var debitContainer = document.createElement("div");
+    debitContainer.className = "border-right";
+    // Create innerTitleDebit
+    var innerTitleDebit = document.createElement("p");
+    innerTitleDebit.style.fontWeight = "900";
+    innerTitleDebit.appendChild(document.createTextNode("Debit"));
+    debitContainer.appendChild(innerTitleDebit);
     for(var j=0;j<account.debitLedger.length;j++){
-
-      // Populate empty cells when possible
-      var tableBody_ = document.getElementById(account.name);
-      if(tableBody_.children[i].children[0].innerHTML==""){
-        var row = document.createElement("tr");
-
-        var td1 = document.createElement("td");
-        td1.appendChild(document.createTextNode(account.debitLedger[i]));
-        row.appendChild(td1);
-
-        var td2 = document.createElement("td");
-        td2.appendChild(document.createTextNode(""));
-        row.appendChild(td2);
-
-        tableBody.appendChild(row);
-      }
+      // Create paragraph to show data
+      var p = document.createElement("p");
+      p.className = "border-bottom";
+      // Append data to paragraph
+      p.appendChild(document.createTextNode(account.debitLedger[j].amount));
+      // Append paragraph to container
+      debitContainer.appendChild(p);
     }
-/*
-    // Create table row
-    var tableRow = document.createElement("tr");
+    // Append debitContainer to innerContainer
+    innerContainer.appendChild(debitContainer);
 
-    var dataCell1 = document.createElement("td");
-    dataCell1.appendChild(document.createTextNode("100"));
-    tableRow.appendChild(dataCell1);
-    var dataCell2 = document.createElement("td");
-    dataCell2.appendChild(document.createTextNode("200"));
-    tableRow.appendChild(dataCell2);
+    // Create credit container
+    var creditContainer = document.createElement("div");
+    creditContainer.className = "border-left";
+    // Create innerTitleCredit
+    var innerTitleCredit = document.createElement("p");
+    innerTitleCredit.style.fontWeight = "900";
+    innerTitleCredit.appendChild(document.createTextNode("Credit"));
+    creditContainer.appendChild(innerTitleCredit);
+    for(var j=0;j<account.creditLedger.length;j++){
+      // Create paragraph to show data
+      var p = document.createElement("p");
+      p.className = "border-bottom";
+      // Append data to paragraph
+      p.appendChild(document.createTextNode(account.creditLedger[j].amount));
+      // Append paragraph to container
+      creditContainer.appendChild(p);
+    }
+    // Append debitContainer to innerContainer
+    innerContainer.appendChild(creditContainer);
 
-    // Finish and append table row
-    tableBody.appendChild(tableRow);
-    */
-
-    // Finish and append table body
-    table.appendChild(tableBody);
-
-    // Append table to container
-    container.appendChild(table);
+    // Append innerContainer to outerContainer
+    outerContainer.appendChild(innerContainer);
 
     // Create 'manage' button
     var button = document.createElement("button");
-    button.className = "btn btn-secondary mb-2";
+    button.id = account.name;
+    button.className = "btn btn-secondary";
     button.style.display = "block";
     button.style.marginLeft = "auto";
     button.style.marginRight = "auto";
+    button.style.marginTop = "1em";
+    button.style.marginBottom = "1em";
     button.innerHTML = "Manage";
+    button.addEventListener("click",function(){
+      modal(this.id);
+    });
 
-    container.appendChild(button);
-
+    outerContainer.appendChild(button);
 
     // Append container
-    document.getElementById("allAccounts").appendChild(container);
+    document.getElementById("allAccounts").appendChild(outerContainer);
   }
 }
 
