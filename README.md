@@ -1,12 +1,14 @@
 # Accounting-System
-A simple and basic accounting system for personal usage.
+A simple and basic accounting system for personal, mostly educational usage.
 
 
 
+
+#Notes
 new residual value = original - residual / lifetime
 
-# Linear
+## Linear
 residual value = -depreciation * terms + original value
 
-# Reducing balance
+## Reducing balance
 residual value = residual value * (1-depreciation % in decimal)
